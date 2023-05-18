@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Farm Product Selling Dashboard</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+		/* Styling for the dashboard */
+		body {
+			font-family: Arial, sans-serif;
+			padding: 20px;
+		}
+		h1 {
+			font-size: 36px;
+			margin-bottom: 20px;
+		}
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+		}
+		.chart-container {
+			position: relative;
+			margin: auto;
+			height: 300px;
+			width: 80%;
+		}
+	</style>
+</head>
+<body>
+	<h1>Farm Product Selling Dashboard</h1>
+
+	<div class="container">
+		<div class="chart-container">
+			<canvas id="product-chart"></canvas>
+			<canvas id="product-chart2"></canvas>
+		</div>
+	</div>
+
+	<script>
+		/* Chart data */
+		var productData = {
+			labels: ['Apples', 'Oranges', 'Potatoes', 'Carrots'],
+			datasets: [{
+				label: 'Product Sales',
+				data: [100, 75, 150, 120],
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)'
+				],
+				borderWidth: 1
+			}]
+		};
+
+		/* Chart options */
+		var productOptions = {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		};
+
+		/* Create the chart */
+		var productChart = new Chart(document.getElementById('product-chart'), {
+			type: 'bar',
+			data: productData,
+			options: productOptions
+		});
+	</script>
+<script>
+		/* Chart data */
+		var productData = {
+			labels: ['Apples', 'Oranges', 'Potatoes', 'Carrots'],
+			datasets: [{
+				label: 'Product Sales',
+				data: [100, 75, 150, 120],
+				backgroundColor: [
+					getRandomColor(),
+					getRandomColor(),
+					getRandomColor(),
+					getRandomColor()
+				],
+				hoverOffset: 4
+			}]
+		};
+
+		/* Chart options */
+		var productOptions = {
+			responsive: true,
+			plugins: {
+				legend: {
+					position: 'right'
+				},
+				title: {
+					display: true,
+					text: 'Product Sales Today'
+				},
+				tooltip: {
+					callbacks: {
+						label: function(context) {
+							var label = context.label || '';
+
+							if (label) {
+								label += ': ';
+							}
+
+							var value = context.raw || 0;
+
+							if (value) {
+								label += value.toLocaleString('en-US', {
+									style: 'currency',
+									currency: 'USD'
+								}) + ' (' + (value / context.dataset.data.reduce(function(a, b) {
+									return a + b;
+								}) * 100).toFixed(2) + '%)';
+							}
+
+							return label;
+						}
+					}
+				}
+			}
+		};
+
+		/* Initialize chart */
+		var productChart = new Chart($('#product-chart2'), {
+			type: 'doughnut',
+			data: productData,
+			options: productOptions
+		});
+
+		/* Function to generate a random color */
+		function getRandomColor() {
+			var letters = '0123456789ABCDEF';
+			var color = '#';
+
+			for (var i = 0; i < 6; i++) {
+				color += letters[Math.floor(Math.random() * 16)];
+			}
+
+			return color;
+		}
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Manager Dashboard </title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
+
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %} ">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="{% static 'dashboard.css' %}" rel="stylesheet">
+  </head>
+  <body>
+	{% include 'partials/_manager-header.html' %}
+
+<div class="container-fluid">
+  <div class="row">
+	{% include 'partials/_manager-sidebar.html' %}
+	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+	 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2 class="h2">Delivery Crew</h2>
+ 
+	<form method="GET" class="form search-form mt-2" >
+        <input type="text" name="q" placeholder="Search..." class="form-control">
+	
+    </form>
+      </div>
+
+    <table class="table table-sm ">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>DOB</th>
+                <th>Status</th>
+                <th>Action</th>     
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+       
+         
+          {% if crew %}
+       
+              {% for person in crew %}
+                 
+                  <tr class="clickable-row">
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ person.name }}</td>
+                      <td>{{ person.phone }}</td>
+                      <td>{{ person.address }}</td>
+                      <td>{{ person.email }}</td>
+                      <td>{{ person.date_of_birth }}</td>
+                      <td>{{ person.is_active }}</td>
+                      <td>
+                      <!--    <form action="{% url 'cart' %}" method="POST">
+                              {% csrf_token %}
+                              <input type="hidden" name="method" value="DELETE">
+                              <button type="submit" class="fa fa-trash btn btn-danger btn-sm"> </button>
+                          </form> -->
+                          <a href="{% url 'crew_details' pk=person.id %}"><i class="fa fa-pencil btn btn-info text-white"></i></a>
+                          <a href="{% url 'crew_details' pk=person.id %}"><i class="fa fa-trash btn btn-danger text-white"></i></a>
+                      </td>   
+                  </tr>
+                
+              {% endfor %}
+      {% endif %}
+        </tbody>
+    </table>
+    
+		<nav aria-label="Page navigation example">
+		  <ul class="pagination">
+			
+			{% if crew.has_previous %}
+        <li class="page-item">
+        <a class="page-link" href="?page=1" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+        <a href="?page={{crew.previous_page_number}}"></a>
+        </li>
+			{% endif %}
+			{% for num in crew.paginator.page_range%}
+			<li class="page-item"><a class="page-link" href="?page={{num}}">{{num}}</a></li>
+			{% endfor %}
+			<li class="page-item">
+				{% if crew.has_next %}
+				  <a class="page-link" href="?page={{ crew.next_page_number }}" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				  </a>
+				{% endif %}
+			</li>
+			
+		  </ul>
+		</nav>
+		 <div class="container text-center">
+        <div class="row">
+          <div class="col">
+            <nav aria-label="Page navigation example">
+		  <ul class="pagination">
+			
+			{% if orders.has_previous %}
+        <li class="page-item">
+        <a class="page-link" href="?page=1" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+        <a href="?page={{orders.previous_page_number}}"></a>
+        </li>
+			{% endif %}
+			{% for num in orders.paginator.page_range%}
+			<li class="page-item"><a class="page-link" href="?page={{num}}">{{num}}</a></li>
+			{% endfor %}
+			<li class="page-item">
+				{% if orders.has_next %}
+				  <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				  </a>
+				{% endif %}
+			</li>
+			
+		  </ul>
+		</nav>
+          </div>
+          
+          <div class="col">
+            <div class="text-center float-end">
+              <button type="button" class="btn btn-info mr-3 text-white"><i class="fa fa-plus"></i> Add Person</button>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+	</main>
+  </div>
+</div>
+
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+  <!--    <script src="{% static 'node_modules/dashboard.js' %}"></script> -->
+ 
+ 
+    <script>
+    // table search
+    const searchInput = document.querySelector('input[name="q"]');
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const columns = row.querySelectorAll('td');
+            let rowVisible = false;
+            columns.forEach(column => {
+                const text = column.textContent.toLowerCase().trim();
+                if (text.includes(searchTerm)) {
+                    rowVisible = true;
+                }
+            });
+            row.style.display = rowVisible ? '' : 'none';
+        });
+    });
+    </script>
+  </body>
+</html>

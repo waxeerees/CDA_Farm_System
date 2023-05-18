@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+      
+        <title>Farm management system</title>
+        <link href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %} ">
+      </head>
+    <body>
+     <!-- Navigation bar area -->
+	{% include "partials/_navbar.html" %}
+	 <!-- End of navigation bar -->
+	 {% block content%}
+	{% if messages %}
+				{% for message in messages %}
+					<div class="container">
+						<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+						  <strong>{{ message }}</strong>
+						  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+    {% endblock %}
+		
+		{% include "partials/_cart-items.html" %}
+
+                
+        {% include "partials/_modals.html" %}
+<!--
+        <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>  
+       <footer class="footer text-white m-0" style="background-color:dodgerblue">
+      BUK Agro-farm &copy; <script>  document.write(new Date().getFullYear());</script> All rights reserved
+    </footer> --> 
+      </body>
+</html>
+

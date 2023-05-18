@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Centre for Dryland Agriculture, Bayero University Kano</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+       
+        <li class="nav-item">
+         <form action="sort-items" method="get" class="d-flex" role="search">
+        <input name="q" type="text" placeholder="Search..." class="form-control me-2" type="search" aria-label="Search">
+        <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
+      </form>
+        </li>
+      </ul>
+      <ul class="navbar-nav me-auto m-2 m-lg-0">
+        <li class="nav-item"><a class="nav-link" href="home"><i class="fa fa-home"></i> <small>Home</small></a></li>
+		{% if user.is_authenticated %}
+		 <li class="nav-item"><a class="nav-link" href="cart"><span><i class="fa fa-shopping-cart"></i>  </span>Cart</a></li>
+		{% endif %}
+		{% if user.is_authenticated %}
+		 <li class="nav-item"><a class="nav-link" href="{% url 'customer_orders' %}"><span><i class="fa fa-shopping-bag"></i>  </span>Orders</a></li>
+		{% endif %}
+           
+            <li class="nav-item"><a class="nav-link" href="{% url 'about_cda'%}"><i class="fa fa-info"></i> About</a></li>
+           
+          {% if user.is_authenticated %}
+			<li class="nav-item"><a href="{% url  'logout_user' %}" class="btn js-scroll-trigger"    id=""><i class="fa fa-sign-out"> </i> Logout</a></li>
+       
+			{% else %}
+            <li class="nav-item"><a class="btn js-scroll-trigger"  data-bs-toggle="modal" data-bs-target="#exampleModal"  id="login_now"><i class="fa fa-sign-in"></i> Login</a></li>
+          {% endif %}
+        </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sold Products Bar Chart</title>
+    <style>
+      .bar-chart {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: flex-end;
+        height: 300px;
+        width: 80%;
+        margin: 0 auto;
+        border: 1px solid black;
+      }
+      
+      .bar {
+        width: 30px;
+        background-color: blue;
+        margin-bottom: 10px;
+      }
+      
+      .bar-label {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sold Products Bar Chart</h1>
+    <div id="sold-products-chart" class="bar-chart"></div>
+    
+    <script>
+      // Example data for sold products
+      const soldProducts = [
+        {
+          day: "Monday",
+          product: "Product A",
+          quantity: 10,
+          price: 5.99
+        },
+        {
+          day: "Monday",
+          product: "Product B",
+          quantity: 5,
+          price: 12.99
+        },
+        {
+          day: "Tuesday",
+          product: "Product C",
+          quantity: 8,
+          price: 8.99
+        },
+        {
+          day: "Wednesday",
+          product: "Product D",
+          quantity: 15,
+          price: 4.99
+        },
+        {
+          day: "Wednesday",
+          product: "Product E",
+          quantity: 3,
+          price: 19.99
+        },
+        {
+          day: "Thursday",
+          product: "Product F",
+          quantity: 2,
+          price: 24.99
+        },
+        {
+          day: "Friday",
+          product: "Product G",
+          quantity: 6,
+          price: 14.99
+        },
+        {
+          day: "Friday",
+          product: "Product H",
+          quantity: 12,
+          price: 7.99
+        }
+      ];
+      
+      // Group sold products by day of the week and sum the total quantity sold
+      const soldProductsByDay = soldProducts.reduce((acc, cur) => {
+        acc[cur.day] = acc[cur.day] || { totalQuantity: 0 };
+        acc[cur.day].totalQuantity += cur.quantity;
+        return acc;
+      }, {});
+      
+      // Draw bar chart using sold products data
+      const chartContainer = document.getElementById("sold-products-chart");
+      Object.keys(soldProductsByDay).forEach((day) => {
+        const barContainer = document.createElement("div");
+        barContainer.classList.add("bar-container");
+        chartContainer.appendChild(barContainer);
+        
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = `${soldProductsByDay[day].totalQuantity * 10}px`;
+        barContainer.appendChild(bar);
+        
+        const barLabel = document.createElement("div");
+        barLabel.classList.add("bar-label");
+        barLabel.textContent = `${day} - ${soldProductsByDay[day].totalQuantity} sold`;
+        barContainer.appendChild(barLabel);
+      });
+    </script>
+  </body>
+</html>

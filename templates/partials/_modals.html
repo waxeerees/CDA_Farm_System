@@ -1,0 +1,88 @@
+        <!-- sign up Modal -->
+        <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Sign Up</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+			  
+             <form method="POST" action="{% url 'user_create' %}">
+			 
+		  {% csrf_token %}
+		  
+		  <div class="container text-center">
+			  <div class="row align-items-start">
+				<div class="col">
+				  <input type="text" name="first_name" placeholder="first name" class="form-control mt-2" required >
+				</div>
+				<div class="col">
+				   <input type="text" name="last_name" placeholder="last name" class="form-control mt-2" required>
+				</div>
+				
+			  </div> <div class="row align-items-start">
+				<div class="col">
+				  <input type="email" name="email" placeholder="Email" class="form-control mt-2" required >
+				</div>
+				<div class="col">
+				   <input type="text" name="username" placeholder="Username" class="form-control mt-2" required>
+				</div>
+				
+			  </div>
+			  <div class="row align-items-center">
+				<div class="col">
+				 <input type="password" name="password" placeholder="Password" class="form-control mt-2" required>
+				</div>
+				<div class="col">
+				  <input type="password" name="re_password" placeholder="Repeat Password" class="form-control mt-2" required>
+				</div>
+			 
+			  </div>
+
+			</div>
+
+              </div>
+              <div class="modal-footer">
+               <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+			   <input type="submit" value="Sign up" class="btn btn-primary">
+              
+              </div>
+			  </form>
+            </div>
+          </div>
+        </div>
+		
+		<!-- Login Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">User Login</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+		
+		<form action="http://127.0.0.1:8000/api/login/" method="POST">
+		{% csrf_token %}
+		  <div class="mb-3">
+			<label for="username" class="form-label">Email/Username</label>
+			<input type="text" class="form-control" name="username" id="username" aria-describedby="emailHelp" required>
+			<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+		  </div>
+		  <div class="mb-3">
+			<label for="password" class="form-label">Password</label>
+			<input type="password" class="form-control" id="password" name="password" required>
+		  </div>		
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#signupModal">Signup</button>
+        <button type="submit" class="btn btn-primary btn-sm">Login</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+

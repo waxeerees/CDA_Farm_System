@@ -1,0 +1,361 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Manager Dashboard </title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
+
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %} ">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="{% static 'dashboard.css' %}" rel="stylesheet">
+  </head>
+  <body>
+	{% include 'partials/_manager-header.html' %}
+
+<div class="container-fluid">
+  <div class="row">
+	{% include 'partials/_manager-sidebar.html' %}
+	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+	 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2 class="h2">Products</h2>
+	
+	<form method="GET" class="form search-form mt-2" >
+        <input type="text" name="q" placeholder="Search..." class="form-control">
+	
+    </form>
+      </div>
+
+   <table class="table">
+  <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Price</th>
+      <th>Inventory</th>
+      <th>Category</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% load humanize %}
+    {% for item in items %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ item.title }}</td>
+      <td>₦{{ item.formatted_price }}</td>
+      <td>{{ item.inventory }}</td>
+      <td>{{ item.category }}</td>
+      <td>
+	
+	  <img src="{{ item.image.url }}" class="rounded-circle" alt="..." style="width:3rem; height:3rem;" ></td>
+      <td>
+	  
+        <button class="btn btn-primary edit-item-btn btn-sm" data-bs-toggle="modal" data-bs-target="#edit-item-modal{{item.id}}" data-item="{{ item.id }}" ><i class="fa fa-pencil"></i> </button>
+	
+	   <button class="btn btn-danger delete-item-btn btn-sm" data-bs-toggle="modal" data-bs-target="#delete-item-modal{{item.id}}"  data-item="{{ item.id }}"><i class="fa fa-trash"></i></button>
+		
+		
+		</form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if items.has_other_pages %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if items.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page=1" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+      <a href="?page={{items.previous_page_number}}"></a>
+    </li>
+    {% endif %}
+    {% for num in items.paginator.page_range%}
+    <li class="page-item"><a class="page-link" href="?page={{num}}">{{num}}</a></li>
+    {% endfor %}
+    {% if items.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ items.next_page_number }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% for item in items %}
+	<!-- delete product Modal -->
+	
+		<div class="modal fade" id="delete-item-modal{{item.id}}" tabindex="-1" aria-labelledby="delete-item-modal" aria-hidden="true">
+		  <div class="modal-dialog">
+		  <form method="POST" action="{% url 'manage_item' pk=item.id %}">
+		  {% csrf_token %}
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h1 class="modal-title fs-5 text-danger" id="delete-item-modal-label">Delete</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			  </div>
+			  <div class="modal-body">
+				<input type="hidden" value="DELETE" name="method">
+					Delete this product?
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+				<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+			  </div>
+			</div>
+			</form>
+		  </div>
+		</div>
+{% endfor %}
+
+{% for item in items %}
+	<!-- Edit Item Modal -->
+<div class="modal fade" id="edit-item-modal{{item.id}}" tabindex="-1" aria-labelledby="edit-item-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" enctype="multipart/form-data" id="edit-item-form" action="{% url 'manage_item' pk=item.id %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="edit-item-modal-label">Edit Product</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="title" class="form-label float-start">Title</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{item.title}}" required>
+              </div>
+             <div class="form-group mb-3">
+			  <label for="price" class="form-label float-start">Price</label>
+			  <div class="input-group">
+				<span class="input-group-text">₦</span>
+				<input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ item.price }}" >
+			  </div>
+			</div>
+              <div class="form-group mb-3">
+                <label for="inventory" class="form-label float-start">Inventory</label>
+                <input type="number" class="form-control" id="inventory" name="inventory" min="0" value="{{item.inventory}}" required>
+              </div>
+              <div class="form-group mb-3">
+                <label for="category" class="form-label float-start">Category</label>
+                <select class="form-select" id="category" name="category" required>
+					
+                  {% for category in categories %}
+                  <option value="{{ category.id }}">{{ category.title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="image" class="form-label float-start">Image</label>
+                <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event)" value="{{ item.image.url }}">
+              </div>
+              <div class="card mb-3">
+                <div class="card-header">Preview Image</div>
+                <div class="card-body text-center">
+                  <img id="image-preview" class="img-fluid" src="{{ item.image.url }}" alt="Preview Image">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+		<input type="hidden" name="method" value="PUT">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+          <button type="submit" class="btn btn-info text-white"><i class="fa fa-edit"></i> Update Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+		 <div class="container text-center">
+        <div class="row">
+     
+          
+          <div class="col">
+            <div class="text-center float-end">
+              <button type="button" class="btn btn-info mr-3 text-white" data-bs-toggle="modal" data-bs-target="#add-item-modal"><i class="fa fa-plus"></i> Add New Item</button>
+            
+<!-- Add Item Modal -->
+<div class="modal fade" id="add-item-modal" tabindex="-1" aria-labelledby="add-item-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" enctype="multipart/form-data" id="add-item-form" action="{% url 'add_item' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-item-modal-label">Add New Product</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="title" class="form-label float-start">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+              <div class="form-group mb-3">
+                <label for="price" class="form-label float-start">Price</label>
+                <div class="input-group">
+                  <span class="input-group-text">₦</span>
+                  <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label for="inventory" class="form-label float-start">Inventory</label>
+                <input type="number" class="form-control" id="inventory" name="inventory" min="0" required>
+              </div>
+              <div class="form-group mb-3">
+                <label for="category" class="form-label float-start">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                  {% for category in categories %}
+                  <option value="{{ category.id }}">{{ category.title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="image" class="form-label float-start">Image</label>
+                <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event)">
+              </div>
+              <div class="card mb-3">
+                <div class="card-header">Preview Image</div>
+                <div class="card-body text-center">
+                  <img id="image-preview" class="img-fluid" src="{% static 'images/placeholder.png' %}" alt="Preview Image">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Add Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+			
+            </div>
+          </div>
+        </div>
+      </div>
+	</main>
+  </div>
+</div>
+
+ <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>  
+       
+
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+  <!--    <script src="{% static 'node_modules/dashboard.js' %}"></script> -->
+ 
+ 
+    <script>
+    // table search
+    const searchInput = document.querySelector('input[name="q"]');
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const columns = row.querySelectorAll('td');
+            let rowVisible = false;
+            columns.forEach(column => {
+                const text = column.textContent.toLowerCase().trim();
+                if (text.includes(searchTerm)) {
+                    rowVisible = true;
+                }
+            });
+            row.style.display = rowVisible ? '' : 'none';
+        });
+    });
+    </script>
+<script>
+function previewImage(event) {
+  var reader = new FileReader();
+  reader.onload = function() {
+    var output = document.getElementById('image-preview');
+    output.src = reader.result;
+  }
+  reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+  </body>
+</html>
